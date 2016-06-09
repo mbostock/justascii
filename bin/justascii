@@ -23,11 +23,9 @@ function ended() {
 
   recast.visit(ast, {
     visitLiteral: function(path) {
-      if (typeof path.value.value === "string") {
-        var quote = path.value.raw[0],
-            value = jsesc(path.value.value, {quotes: quote === "'" ? "single" : "double"}),
-            literal = quote + value + quote;
-        path.value.value = new String(literal); // This hack prevents Recast from re-escaping!
+      var node = path.value;
+      if (typeof node.value === "string") { // A new String prevents Recast from re-escaping!
+        node.value = new String(jsesc(node.value, {wrap: true, quotes: node.raw[0] === "'" ? "single" : "double"}));
       }
       this.traverse(path);
     }
