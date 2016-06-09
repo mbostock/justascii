@@ -1,4 +1,4 @@
-# Just ASCII
+# Want ASCII? Just ASCII!
 
 Rewrite JavaScript to escape any non-ASCII characters in string literals. For example, the following input:
 
