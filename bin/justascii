@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+var recast = require("recast"),
+    jsesc = require("jsesc");
+
+var input = [];
+
+process.stdin
+    .on("error", errored)
+    .on("data", dataed)
+    .on("end", ended);
+
+function errored(error) {
+  throw error;
+}
+
+function dataed(data) {
+  input.push(data);
+}
+
+function ended() {
+  var ast = recast.parse(Buffer.concat(input).toString("utf-8"));
+
+  recast.visit(ast, {
+    visitLiteral: function(path) {
+      if (typeof path.value.value === "string") {
+        var quote = path.value.raw[0],
+            value = jsesc(path.value.value, {quotes: quote === "'" ? "single" : "double"}),
+            literal = quote + value + quote;
+        path.value.value = new String(literal); // This hack prevents Recast from re-escaping!
+      }
+      this.traverse(path);
+    }
+  });
+
+  process.stdout.write(recast.print(ast).code);
+}
