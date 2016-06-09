@@ -1,7 +1,7 @@
 {
   "name": "justascii",
   "version": "0.0.0",
-  "description": "Rewrite JavaScript to escape any non-ASCII characters.",
+  "description": "Rewrite JavaScript to escape any non-ASCII characters in string literals.",
   "keywords": [
     "json",
     "es6",
